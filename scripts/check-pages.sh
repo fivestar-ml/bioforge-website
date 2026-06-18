@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 required_files=(
   "$ROOT_DIR/index.html"
+  "$ROOT_DIR/app-ads.txt"
   "$ROOT_DIR/privacy/index.html"
   "$ROOT_DIR/support/index.html"
   "$ROOT_DIR/fairway-fortune/index.html"
@@ -25,6 +26,8 @@ required_strings=(
   "Rewarded ads are optional"
 )
 
+required_app_ads_line="google.com, pub-3492670382418249, DIRECT, f08c47fec0942fa0"
+
 for file in "${required_files[@]}"; do
   if [[ ! -f "$file" ]]; then
     echo "Missing website file: $file" >&2
@@ -42,6 +45,11 @@ for text in "${required_strings[@]}"; do
     exit 1
   fi
 done
+
+if [[ "$(cat "$ROOT_DIR/app-ads.txt")" != "$required_app_ads_line" ]]; then
+  echo "app-ads.txt must contain exactly: $required_app_ads_line" >&2
+  exit 1
+fi
 
 for forbidden in \
   "Before publishing" \
